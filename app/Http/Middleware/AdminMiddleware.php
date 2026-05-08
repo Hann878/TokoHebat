@@ -15,8 +15,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (session('role') !== 'admin') {
-            return redirect('/');// Redirect ke halaman utama jika bukan admin
+        if ($request->header('role') !== 'admin') {
+            return response()->json([
+                'message' => 'Akses ditolak'
+            ], 403);
         }
 
         return $next($request);
