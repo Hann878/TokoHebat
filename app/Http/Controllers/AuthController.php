@@ -38,9 +38,9 @@ class AuthController extends Controller
     //ini merupakan kode Yoga yang telah diperbaiki
     public function register(Request $request){
         $request->validate([
-            'name' => 'required|string|max: 100',
-            'email' => 'required|unique|email',
-            'password'=> 'required|min: 8'
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'password'=> 'required|min:8'
         ]);
 
         try {
