@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -68,10 +69,16 @@ class AuthController extends Controller
         ]);
 
         $user = DB::table('users')
-        ->where('email', $request->email)
-        ->first();
+            ->where('email', $request->email)
+            ->first();
 
         if($user && Hash::check($request->password, $user->password)){
+            // simpan session
+            Session::put('user_id', $user->id);
+            Session::put('role', $user->role);
+            Session::save();
+            
+
             return response()->json([
                 'message' => 'Login Berhasil',
                 'user' => $user
@@ -82,4 +89,15 @@ class AuthController extends Controller
             'message' => 'Login Gagal'
         ], 401);
     }
+    
+    public function destroy(){
+        DB::table('users')->delete();
+        return response()->json([
+            'message' => 'Semua data user telah dihapus'
+        ]);
+        
+        
+    }
+
+
 }
